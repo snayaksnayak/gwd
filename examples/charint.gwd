@@ -1,0 +1,39 @@
+func main()
+fdef main()
+{
+    char a
+
+    a = 'p'
+    print a
+    a = 97
+    print a
+
+    input a
+    print a
+
+    if a == 'y' then
+        print "you entered y"
+    else
+    endif
+
+    if a < 'y' then
+        print "you entered x"
+    else
+    endif
+
+    if a > 'y' then
+        print "you entered z"
+    else
+    endif
+
+    int b
+
+    b = a
+    print b
+    a = b
+    print a
+    b = 'y'
+    print b
+
+    return 0
+}

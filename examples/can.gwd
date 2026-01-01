@@ -1,0 +1,38 @@
+#must test
+
+int a
+int b
+
+type dog == record
+    int age
+    int cost
+    can add(int p, int q)
+    cdef add(int p, int q)
+    {
+        print self.age
+        print self.cost
+        print p
+        print q
+        int s
+        s = p+q
+        return s
+    }
+endrec
+
+dog d
+
+func main()
+fdef main()
+{
+    d.age = 4
+    d.cost = 10
+    a=5
+    b=3
+
+    int sum
+
+    sum=d..add(a, b)
+    print sum
+
+    return 0
+}

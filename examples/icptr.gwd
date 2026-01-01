@@ -1,0 +1,47 @@
+type ipt == points int
+
+ipt ipa
+ipt ipb
+
+int a
+
+type cpt == points char
+
+cpt cpd
+cpt cpe
+
+
+func main()
+fdef main()
+{
+    input a
+
+    bind ipa = a
+    print ipa
+
+    ipa = 4
+    print a
+
+    move ipb = ipa
+    print ipb
+
+    a = 5
+    print ipb
+
+    char d
+    input d
+
+    bind cpd = d
+    print cpd
+
+    cpd = 'z'
+    print d
+
+    move cpe = cpd
+    print cpe
+
+    d = 'x'
+    print cpe
+
+    return d
+}

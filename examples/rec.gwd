@@ -1,0 +1,36 @@
+type iarrtype == array int 10
+type carrtype == array char 10
+type rectype == record
+    int a
+    char b
+    iarrtype c
+    carrtype d
+endrec
+
+rectype myrec
+
+func main()
+fdef main()
+{
+    myrec.a = 3
+    myrec.b = 'x'
+    myrec.c[2] = 5
+    myrec.d[3] = 'y'
+
+    print myrec.a
+    print myrec.b
+    print myrec.c[2]
+    print myrec.d[3]
+
+    input myrec.a
+    input myrec.b
+    input myrec.c[2]
+    input myrec.d[3]
+
+    print myrec.a
+    print myrec.b
+    print myrec.c[2]
+    print myrec.d[3]
+
+    return 0
+}

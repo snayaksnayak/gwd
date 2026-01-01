@@ -1,0 +1,33 @@
+type intarrtype == array int 10
+
+intarrtype a
+
+func main()
+fdef main()
+{
+    a[0] = 3
+    print a[0]
+
+    int p
+    p = a[0]
+    print p
+
+    input a[1]
+    print a[1]
+
+    a[1] = 4
+    p = a[1]
+    print p
+
+    p = 5
+    a[1] = p
+    print a[1]
+
+    if a[1] == 5 then
+        print "you got 5"
+    else
+        print "you didn't get 5"
+    endif
+
+    return 0
+}

@@ -1,0 +1,33 @@
+type carrtype == array char 10
+
+carrtype a
+
+func main()
+fdef main()
+{
+    a[0] = 'a'
+    print a[0]
+
+    char p
+    p = a[0]
+    print p
+
+    input a[1]
+    print a[1]
+
+    a[1] = 98
+    p = a[1]
+    print p
+
+    p = 99
+    a[1] = p
+    print a[1]
+
+    if a[1] == 'a' then
+        print "you got a"
+    else
+        print "you didn't get a"
+    endif
+
+    return 0
+}

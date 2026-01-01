@@ -1,0 +1,26 @@
+type iat == array int 10
+iat a
+
+type iapt == points iat
+iapt ipa
+iapt ipb
+
+func main()
+fdef main()
+{
+    input a[2]
+
+    bind ipa = a
+    print ipa[2]
+
+    ipa[2] = 4
+    print a[2]
+
+    move ipb = ipa
+    print ipb[2]
+
+    a[2] = 5
+    print ipb[2]
+
+    return 0
+}

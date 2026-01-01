@@ -1,0 +1,93 @@
+int m11
+int m12
+int m13
+int m14
+int m21
+int m22
+int m23
+int m24
+int m31
+int m32
+int m33
+int m34
+int m41
+int m42
+int m43
+int m44
+
+func main()
+fdef main()
+{
+
+    print "Transform a vector by a matrix."
+
+    m11 = 0
+    m12 = 0
+    m13 = 0
+    m14 = 0
+    m21 = 0
+    m22 = 0
+    m23 = 0
+    m24 = 0
+    m31 = 0
+    m32 = 0
+    m33 = 0
+    m34 = 0
+    m41 = 0
+    m42 = 0
+    m43 = 0
+    m44 = 0
+
+    print "Enter 16 matrix values: "
+    input m11
+    input m12
+    input m13
+    input m14
+    input m21
+    input m22
+    input m23
+    input m24
+    input m31
+    input m32
+    input m33
+    input m34
+    input m41
+    input m42
+    input m43
+    input m44
+
+    int v1
+    v1 = 0
+    int v2
+    v2 = 0
+    int v3
+    v3 = 0
+    int v4
+    v4 = 0
+
+    print "Enter 4 vector values: "
+    input v1
+    input v2
+    input v3
+    input v4
+
+    int result1
+    result1 = m11 * v1 + m12 * v2 + m13 * v3 + m14 * v4
+    int result2
+    result2 = m21 * v1 + m22 * v2 + m23 * v3 + m24 * v4
+    int result3
+    result3 = m31 * v1 + m32 * v2 + m33 * v3 + m34 * v4
+    int result4
+    result4 = m41 * v1 + m42 * v2 + m43 * v3 + m44 * v4
+
+    print result1
+    print result2
+    print result3
+    print result4
+
+    return 0
+}
+
+#input matrix values 1, 2, 3, ..., 16
+#input vector values 1, 2, 3, 4
+#output will come as 30, 70, 110, 150

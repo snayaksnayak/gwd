@@ -1,0 +1,58 @@
+# Take an arbitrary number of inputs an return the minimum, maximum, sum, and average.
+
+func main()
+fdef main()
+{
+    int minsofar
+    minsofar = 0
+    int maxsofar
+    maxsofar = 0
+    int sum
+    sum = 0
+
+    int num
+    num = 0
+    print "Enter number of inputs: "
+    input num
+
+    int i
+    i = 0
+    int c
+    c = 0
+    while i < num repeat
+        input c
+        if i == 0 then
+            minsofar = c
+            maxsofar = c
+        else
+            if c < minsofar then
+                minsofar = c
+            else
+                minsofar = minsofar
+            endif
+
+            if c > maxsofar then
+                maxsofar = c
+            else
+                maxsofar = maxsofar
+            endif
+        endif
+        sum = sum + c
+        i = i + 1
+    endwhile
+
+    print "Min: "
+    print minsofar
+    print "Max: "
+    print maxsofar
+    print "Sum: "
+    print sum
+
+    int avg
+    avg = sum/num
+
+    print "Avg: "
+    print avg
+
+    return 0
+}

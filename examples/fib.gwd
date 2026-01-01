@@ -1,0 +1,27 @@
+func main()
+fdef main()
+{
+    int nums
+
+    nums = 0
+    print "How many fibonacci numbers do you want?"
+    input nums
+    print ""
+
+    int a
+    a = 0
+
+    int b
+    b = 1
+
+    int c
+    while nums > 0 repeat
+        print a
+        c = a + b
+        a = b
+        b = c
+        nums = nums - 1
+    endwhile
+
+    return 0
+}

@@ -1,0 +1,30 @@
+#func test
+
+int a
+int b
+
+func main()
+func add(int a, int b)
+
+fdef main()
+{
+    a=5
+    b=3
+    int sum
+    sum=add(a, b)
+    print sum
+    print a
+    print b
+    return 0
+}
+
+fdef add(int a, int b)
+{
+    print a
+    print b
+    int s
+    s=a+b
+    a=6
+    b=4
+    return s
+}

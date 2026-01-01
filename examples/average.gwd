@@ -1,0 +1,33 @@
+# Compute average of given values.
+
+int a
+int b
+int s
+int c
+
+func main()
+fdef main()
+{
+    a = 0
+    while a < 1 repeat
+        print "Enter number of scores: "
+        input a
+    endwhile
+
+    b = 0
+    s = 0
+    c = 0
+    print "Enter one value at a time: "
+    while b < a repeat
+        input c
+        s = s + c
+        b = b + 1
+    endwhile
+
+    print "Average: "
+    int avg
+    avg = s/a
+    print avg
+
+    return 0
+}

@@ -1,0 +1,29 @@
+type rt == record
+            int a
+            int b
+            endrec
+rt p
+
+type rpt == points rt
+rpt x
+rpt y
+
+func main()
+fdef main()
+{
+    input p.b
+
+    bind x = p
+    print x.b
+
+    x.b = 4
+    print p.b
+
+    move y = x
+    print y.b
+
+    p.b = 5
+    print y.b
+
+    return 0
+}
