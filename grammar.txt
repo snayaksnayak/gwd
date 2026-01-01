@@ -1,0 +1,107 @@
+nl ::= "\n" {"\n"}
+intlit ::= 1 digit number to 9 digit number
+charlit ::= ascii value 0 to 127
+strlit ::= a string in double quote
+ident ::= starting with alphabate and
+          after that using alphanumeric characters,
+          a string of length upto 128
+typename ::= ident
+varname ::= ident
+funcname ::= ident
+
+program ::= {declaration} {procedure}
+declaration ::= "type" typename "==" (ptrtype | comptype | codetype) nl
+              | (primtype | typename) varname nl
+              | "ref" varname "points" (primtype | comp_typename) nl     #typename!=ptrtype, we have no pointer dereferencing
+              | "func" funcname "(" {(primtype | typename) varname ","} ")" nl
+              | "must" funcname "(" {(primtype | typename) varname ","} ")" nl
+
+primtype ::= "int" | "char"
+
+ptrtype ::= "points" (primtype | comp_typename)     #typename!=ptrtype, we have no pointer dereferencing
+comptype ::= arrtype | rectype
+
+len ::= intlit
+arrtype ::= "array" (primtype | typename) len
+
+rectype ::= "record" nl rec_member {rec_member} "endrec"
+rec_member ::= (primtype | typename) varname nl
+               | "ref" varname "points" (primtype | comp_typename) nl     #typename!=ptrtype, we have no pointer dereferencing
+               | "can" funcname "(" {(primtype | typename) varname ","} ")" nl
+               | "must" funcname "(" {(primtype | typename) varname ","} ")" nl
+               | can_procedure
+               | must_procedure
+
+can_procedure ::= "cdef" funcname "(" {(primtype | typename) varname ","} ")" nl
+                  "{" nl {primvardecl} {statement} "return" expression nl "}" nl
+must_procedure ::= "mdef" funcname "(" {(primtype | typename) varname ","} ")" nl
+                   "{" nl {primvardecl} {statement} "return" expression nl "}" nl
+
+codetype ::= "must" funcname
+
+procedure ::= "fdef" funcname "(" {(primtype | typename) varname ","} ")" nl
+              "{" nl {primvardecl} {statement} "return" expression nl "}" nl
+
+primvardecl ::= primtype varname nl
+
+statement ::= "print" (chararr_accessor_lval | accessor | strlit ) nl
+            | "input" accessor_lval nl
+            | accessor_lval "=" expression nl
+            | "poly" must_accessor_lval "=" rec_accessor_lval nl
+            | "bind" ptr_accessor_lval "=" ("new" typename | accessor_lval) nl
+            | "move" ptr_accessor_lval "=" ptr_accessor_lval nl
+            | "free" ptr_accessor_lval nl
+            | "if" (logical_expression) "then" nl
+                {statement}
+              "else" nl
+                {statement}
+              "endif" nl
+            | "while" (logical_expression) "repeat" nl
+                {statement}
+              "endwhile" nl
+
+logical_expression ::= logical_term {or}
+or ::= "|" logical_term
+
+logical_term ::= logical_unary {and}
+and ::= "&" logical_unary
+
+logical_unary ::= not
+				| logical_primary
+not ::= "~" logical_primary
+
+logical_primary ::= comparison
+                  | "[" logical_expression "]"
+                 
+comparison ::= expression (eq | neq | gt | ge | lt | le)      #for char also
+eq ::= "==" expression
+neq ::= "!=" expression
+gt ::= ">" expression
+ge ::= ">=" expression
+lt ::= "<" expression
+le ::= "<=" expression
+
+expression ::= term {add | sub}
+add ::= "+" term
+sub ::= "-" term
+
+term ::= unary {mul | div}
+mul ::= "*" unary
+div ::= "/" unary
+
+unary ::= plus | minus | primary
+plus ::= "+" primary
+minus ::= "-" primary
+
+primary ::= intlit | charlit | accessor
+          | accessor_lval ".." mccall
+          | must_accessor_lval "::" pcall
+          | fcall | "(" expression ")"
+
+accessor_lval ::= varname {member}
+member ::= "." varname
+         | "[" (intlit | int_accessor_lval) "]"
+
+mccall ::= funcname "(" {varname ","} ")"
+fcall ::= funcname "(" {varname ","} ")"
+pcall ::= funcname "(" {varname ","} ")"

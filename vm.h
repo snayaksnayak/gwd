@@ -1,0 +1,12 @@
+int run_vm();
+int alloc_strlit(int symbol_index);
+int alloc_ident(int symbol_index);
+void put_opcode(int op);
+void put_operand(int operand);
+int get_text_addr_here();
+void fix_operand(int addr, int operand);
+void print_text();
+int print_instruction(int pc);
+void print_data();
+void print_reg();
+int get_bytes_req(int size);

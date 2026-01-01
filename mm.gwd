@@ -1,0 +1,253 @@
+#start addr of freemem after global data
+#to be set by code generator
+int heap_base
+
+#375 blocks of 64bytes = 24000bytes,
+#that is from 16000 to 40000,
+#which is total memory for data,
+#heap and stack together
+#text area is from 0 to 16000
+type bitmap_t == array char 375
+bitmap_t heap_bitmap
+
+#in bitmap, if first index represents
+#16000-16064, and second for 16064-16128,
+#and so on,
+#then start index is (heap_base-16000)/64
+#end index is 374
+#index less than start index are blocks
+#used by global data
+
+#visualization of my heap_bitmap
+#abbabaafgggaabbfga
+#a=start of an allocated block
+#b=continued allocated block
+#f=start of an free block
+#g=continued free block
+#when a block is freed,
+#it should merge with free block
+#present on left and right
+
+#SEUNKNOWN=-1000000000,
+#SEBADIN=-1000000001,
+#SENOMEM=-1000000002,
+
+func heap_new(int size)
+fdef heap_new(int size)
+{
+    int ret
+
+    #print "size"
+    #print size
+
+    int start_index
+    start_index = (heap_base-16000)/64
+
+    #print "heap base"
+    #print heap_base
+
+    #print "start_index"
+    #print start_index
+
+    int blockneed
+    blockneed = size/64
+    if blockneed*64 != size then
+        blockneed = blockneed + 1
+    else
+    endif
+
+    #print "blockneed"
+    #print blockneed
+
+    int found
+    found = 0
+
+    #how many free blocks i got
+    int got_blocks
+    got_blocks=0
+    #start index of found free block
+    int found_free_index
+    found_free_index=0
+
+    int i
+    i = start_index
+
+    #search for free block
+    while i < 375 repeat
+        if found == 0 then
+            if heap_bitmap[i] == 'f' then
+                got_blocks = 1
+                found_free_index = i
+            else
+            endif
+
+            if heap_bitmap[i] == 'g' then
+                got_blocks = got_blocks + 1
+            else
+            endif
+
+            if got_blocks == blockneed then
+                found = 1
+            else
+            endif
+
+            #print "found_free_index"
+            #print found_free_index
+
+            #print "got_blocks"
+            #print got_blocks
+
+        else
+        endif
+
+        i = i + 1
+
+    endwhile
+
+    if found == 1 then
+
+        #alloc found block
+        i = found_free_index
+        while i < found_free_index+blockneed repeat
+            if i == found_free_index then
+                heap_bitmap[i] = 'a'
+            else
+                heap_bitmap[i] = 'b'
+            endif
+
+            i = i + 1
+        endwhile
+
+        #make rest free
+        i = found_free_index + blockneed
+        if i < 375 then
+            if heap_bitmap[i] == 'g' then
+                heap_bitmap[i] = 'f'
+            else
+            endif
+        else
+        endif
+
+        ret = 16000 + found_free_index*64
+
+        #print bitmap
+        #i = start_index
+        #while i < 375 repeat
+            #print heap_bitmap[i]
+            #i = i + 1
+        #endwhile
+
+    else
+        ret = -1000000002
+    endif
+
+    #print "ret"
+    #print ret
+
+    return ret
+}
+
+func heap_free(int addr)
+fdef heap_free(int addr)
+{
+    int ret
+    int i
+    int done
+
+    int start_index
+    start_index = (heap_base-16000)/64
+
+    #print "start_index"
+    #print start_index
+
+    int tofree_index
+    tofree_index = (addr-16000)/64
+
+    #print "tofree_index"
+    #print tofree_index
+
+    #if user provided addr is aligned to 64
+    if (tofree_index*64)+16000 == addr then
+
+        #if addr is truly allocated
+        if heap_bitmap[tofree_index] == 'a' then
+
+            #change header and merge left
+            if tofree_index > start_index then
+                i = tofree_index - 1
+                if heap_bitmap[i] == 'a' then
+                    heap_bitmap[tofree_index] = 'f'
+                else
+                if heap_bitmap[i] == 'b' then
+                    heap_bitmap[tofree_index] = 'f'
+                else
+                if heap_bitmap[i] == 'f' then
+                    heap_bitmap[tofree_index] = 'g'
+                else
+                if heap_bitmap[i] == 'g' then
+                    heap_bitmap[tofree_index] = 'g'
+                else
+                endif
+                endif
+                endif
+                endif
+            else
+            endif
+
+            #change header only, if left doesn't exist
+            if tofree_index == start_index then
+                heap_bitmap[tofree_index] = 'f'
+            else
+            endif
+
+            #tofree_index < start_index doesn't arise
+            #if we see outer if condition, but we can't be sure.
+            #for the time being lets assume it is so
+            #because that is just a safty check for input validity
+
+            #change continuation and merge right
+            done = 0
+            i = tofree_index + 1
+            while i < 375 repeat
+                if done == 0 then
+                    if heap_bitmap[i] != 'a' then
+                        if heap_bitmap[i] == 'b' then
+                            heap_bitmap[i] = 'g'
+                        else
+                        if heap_bitmap[i] == 'f' then
+                            heap_bitmap[i] = 'g'
+                        else
+                        #if heap_bitmap[i] == 'g' then
+                            #heap_bitmap[i] = 'g'
+                        #else
+                        #endif
+                        endif
+                        endif
+                    else
+                        done = 1
+                    endif
+                else
+                endif
+                i = i + 1
+            endwhile
+
+            #print bitmap
+            #i = start_index
+            #while i < 375 repeat
+                #print heap_bitmap[i]
+                #i = i + 1
+            #endwhile
+
+            ret = 0
+
+        else
+            ret = -1000000001
+        endif
+    else
+        ret = -1000000001
+    endif
+
+    return ret
+}
+
+#end this file with a newline

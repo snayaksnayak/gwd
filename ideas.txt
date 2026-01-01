@@ -1,0 +1,164 @@
+============================
+
+#we can add this later
+
+statement ::= ...
+              ...
+            | a_var "=" a_var nl
+            | r_var "=" r_var nl
+              ...
+              ...
+
+rec and arr assignment can replace casting.
+
+============================
+
+since a heap allocated object doesn't have a name,
+pointer is a name for this object in programming.
+
+for functions, formal arguments(parameters) will
+always be pointers to actual arguments(parameters).
+so formal arguments will just act as new names.
+they will be readable unless specified "alt"(alterable).
+
+pointer will only get assigned from "new".
+now for testing purpose, we allow addr of varnames
+to be assigned to pointers. later it will be removed.
+addr assignment to pointers are called "bind" operation.
+to-be-assigned pointer must be empty.
+
+pointers can be freed and assigned 0 by "delete".
+delete will free the memory allocated in heap.
+this deallocation is called "free" operation.
+if deleted pointer is 0, no error.
+if deleted pointer is already freed, no error.
+
+there is a "move" operation which moves reference
+to another empty pointer variable and makes former 0.
+to-be-assigned pointer must be empty.
+
+making 0, checking emptiness is not implemented yet.
+
+two pointers in a move operation can be of diff ptr type.
+but those ptr types must point to same type of
+rec or arr or primtype. this is implemented.
+
+function pointers are of a little different nature.
+delete can also make function pointers 0,
+because function addresses are not found in heap.
+
+all pointers must be declared in global scope.
+no local pointers can be declared in functions.
+and so functions can never return any address.
+since pointers act as var, pointers can be passed as params.
+
+[global and move nature can't make sure all allocated
+objects are always reachable throughout program life.
+because you can have a record variable on stack and
+inside it you have a pointer. so you can allocate and forget.
+so this just reduces unintentional memory leaks.
+
+this also doesn't allow multiple references to same object.
+so this scheme solves? multiple free issues as well.]
+
+accessing pointer accesses the refered object,
+no separate syntax for pointer dereferencing.
+
+address of any int, char, array, rec or pointer
+can't be obtained by using any "address of" operator.
+
+pointer can not point to another pointer.
+
+no ptr, arr, rec declaration allowed inside functions.
+
+======================
+
+a scheme for unifying functions
+returning bool, int and addresses
+---------------------------------
+-all functions always return int.
+-for a 4bit system,
+-return val >= +4 and <= +7 is app error.
+-return val <= -5 and >= -8 is system error.
+-other return values are for success.
+-valid numerical operation range is from -4 to +3.
+-if a function want to return int, it can play within -4 to +3.
+ if input errors found, it can return values in range +4 to +7.
+ if system errors found it can return values in range -5 to -8.
+-if a function want to return bool, it can return 0 for success.
+ if input errors found, it can return values in range +4 to +7.
+ if system errors found it can return values in range -5 to -8.
+-if a function want to return address, it can return 3bit address.
+ if input errors found, it can return values in range +4 to +7.
+ if system errors found it can return values in range -5 to -8.
+-for a 64bit system, this scheme will work very well.
+ because, here we use only 48bit for addresses.
+ so valid numeric range, valid address range,
+ valid app error range and valid system error range can be set.
+-for a 32bit system, this scheme will not work very well.
+ because here we use whole 32bit for addresses.
+ so above scheme will work only for bool and int returning functions.
+ but still it can work for address returning functions,
+ if we return addresses via function arguments.
+-in 64bit systems, we use virtual addresses
+ from 0 to +(2^47-1) and -1 to -(2^47).
+ [0 to +(2^47-1) is 128TB, user address space,
+ -1 to -(2^47) is 128TB, kernel address space]
+ to get an intuition, it is like, in a 12bit system,
+ we use only 8bit for virtual addresses.
+ that is, only 256 addresses.
+ from 0 to +(2^7-1) and -1 to -(2^7).
+ which is, from 0 to 127 and -1 to -128.
+ rest all addresses do not exist.
+
+==============================
+
+types shouldn't be same as
+func, global must, symbol, type(multi decl)
+
+symbols shouldn't be same as
+type, symbol(multi decl)
+
+funcs shouldn't be same as
+type, func(multi decl)
+
+    params shouldn't be same as
+    type, param(multi decl)
+        our local scope hides global variables
+
+    locals shouldn't be same as
+    type, param, local(multi decl)
+        our local scope hides global variables
+
+global musts shouldn't be same as
+type, global must(multi decl)
+
+    params shouldn't be same as
+    type, param(multi decl)
+        our local scope hides global variables
+
+---------
+
+class musts shouldn't be same as
+type, class can, class must(multi decl)
+
+    locals shouldn't be same as
+    type, param, local(multi decl)
+        our local scope hides global variables
+
+class cans shouldn't be same as
+type, class must, class can(multi decl)
+
+    params shouldn't be same as
+    type, param(multi decl)
+        our local scope hides global variables
+
+    locals shouldn't be same as
+    type, param, local(multi decl)
+        our local scope hides global variables
+
+class members shouldn't be same as
+type, member(multi decl)
+
+===========================
+
