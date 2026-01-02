@@ -1,5 +1,5 @@
 
-# GWD Programming Language
+# The GWD Programming Language
 
 A new programming language, **GWD** /good/,  
 and its compiler/interpreter with its VM,  
@@ -25,14 +25,70 @@ $ ./a.out ./examples/average.gwd
 $ cat out.ir.txt
 ````
 
-look at `build.sh` for more info,
+or
+
+```sh
+$ ./build.sh
+````
+
+Look at `build.sh` for more info,
 and how to include memory manager.
 
+## **Example GWD Programs**:
+
+* **Assignment, If and While**
+  * [Find Average](https://github.com/snayaksnayak/gwd/blob/main/examples/average.gwd)
+  * [Fibonacci Numbers](https://github.com/snayaksnayak/gwd/blob/main/examples/fib.gwd)
+  * [Minimum and Maximum](https://github.com/snayaksnayak/gwd/blob/main/examples/minmax.gwd)
+  * [Transform a vector](https://github.com/snayaksnayak/gwd/blob/main/examples/vector.gwd)
+
+* **Logical Expression**
+  * [Logical expression](https://github.com/snayaksnayak/gwd/blob/main/examples/logicop.gwd)
+
+* **Conversion**
+  * [Conversion of 'char' and 'int'](https://github.com/snayaksnayak/gwd/blob/main/examples/charint.gwd)
+
+* **Array**
+  * [Integer Array](https://github.com/snayaksnayak/gwd/blob/main/examples/iarray.gwd)
+  * [Character Array](https://github.com/snayaksnayak/gwd/blob/main/examples/carray.gwd)
+
+* **Record**
+  * [Use of Record](https://github.com/snayaksnayak/gwd/blob/main/examples/rec.gwd)
+  * [Use of 'can' method](https://github.com/snayaksnayak/gwd/blob/main/examples/can.gwd)
+  * [Use of 'must' method](https://github.com/snayaksnayak/gwd/blob/main/examples/must.gwd)
+
+* **Pointer**
+  * [Pointer to Integer, Pointer to Character](https://github.com/snayaksnayak/gwd/blob/main/examples/icptr.gwd)
+  * [Use of 'ref'](https://github.com/snayaksnayak/gwd/blob/main/examples/ref.gwd)
+  * [Pointer to Array](https://github.com/snayaksnayak/gwd/blob/main/examples/aptr.gwd)
+  * [Pointer to Record](https://github.com/snayaksnayak/gwd/blob/main/examples/rptr.gwd)
+
+* **Function**
+  * [Function, param is alias, different to globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func1.gwd)
+  * [Function, param is alias, same as globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func2.gwd)
+  * [Function, locals hide globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func3.gwd)
+
+* **Dynamic Memory Allocation**
+  * [Use of 'new' and 'free'](https://github.com/snayaksnayak/gwd/blob/main/examples/newfree.gwd)
+  
+* **Polymorphism**
+  * [Polymorphism](https://github.com/snayaksnayak/gwd/blob/main/examples/poly.gwd)
+
+* **Memory Manager**
+  * [Memory Manager](https://github.com/snayaksnayak/gwd/blob/main/mm.gwd)
+  
+## **Grammar of GWD Language**:
+
+* [EBNF Grammar of GWD](https://github.com/snayaksnayak/gwd/blob/main/grammar.txt)
+
+ 
 ---
+---
+
 
 # **The GWD Programming Language**
 
-### *Language Summary*
+## *Language Summary*
 
 ---
 
@@ -96,6 +152,22 @@ and how to include memory manager.
   * virtual machine
   * debugger
 * The language is intended as a **practical exploration tool**—a system where language design, compilation, and execution are clearly visible.
+* Design of GWD language and its compiler has been heavily influenced by:
+
+  * [Programming Language Oberon 7, by Nikluas Wirth](https://people.inf.ethz.ch/wirth/Oberon/Oberon07.Report.pdf)
+  
+  * [Compiler Construction, by Nikluas Wirth](https://people.inf.ethz.ch/wirth/CompilerConstruction/index.html)
+  
+  * [Let's Build a Compiler, by Jack Crenshaw](https://compilers.iecc.com/crenshaw/)
+  
+  * [Let's Build a Compiler, by Jack Crenshaw, prettier version by xmonader](https://xmonader.github.io/letsbuildacompiler-pretty/)
+  
+  * [Let's Build a Compiler, by Jack Crenshaw, x86 version](https://web.archive.org/web/20220224184941/http://pp4s.co.uk/main/tu-trans-comp-jc-01.html)
+  
+  * [Teeny Tiny compiler, by Austin Z. Henley](https://austinhenley.com/blog/teenytinycompiler1.html)
+  
+  * [Stack based VM and its ISA, by lotabout](https://github.com/lotabout/write-a-C-interpreter/blob/master/tutorial/en/2-Virtual-Machine.md)
+  
 
 ---
 
@@ -1131,7 +1203,125 @@ and how to include memory manager.
 
 ---
 
-## Done
+## **Appendix A**
+
+```ebnf
+
+
+nl ::= "\n" {"\n"}
+intlit ::= 1 digit number to 9 digit number
+charlit ::= ascii value 0 to 127
+strlit ::= a string in double quote
+ident ::= starting with alphabate and
+          after that using alphanumeric characters,
+          a string of length upto 128
+typename ::= ident
+varname ::= ident
+funcname ::= ident
+
+program ::= {declaration} {procedure}
+declaration ::= "type" typename "==" (ptrtype | comptype | codetype) nl
+              | (primtype | typename) varname nl
+              | "ref" varname "points" (primtype | comp_typename) nl     #typename!=ptrtype, we have no pointer dereferencing
+              | "func" funcname "(" {(primtype | typename) varname ","} ")" nl
+              | "must" funcname "(" {(primtype | typename) varname ","} ")" nl
+
+primtype ::= "int" | "char"
+
+ptrtype ::= "points" (primtype | comp_typename)     #typename!=ptrtype, we have no pointer dereferencing
+comptype ::= arrtype | rectype
+
+len ::= intlit
+arrtype ::= "array" (primtype | typename) len
+
+rectype ::= "record" nl rec_member {rec_member} "endrec"
+rec_member ::= (primtype | typename) varname nl
+               | "ref" varname "points" (primtype | comp_typename) nl     #typename!=ptrtype, we have no pointer dereferencing
+               | "can" funcname "(" {(primtype | typename) varname ","} ")" nl
+               | "must" funcname "(" {(primtype | typename) varname ","} ")" nl
+               | can_procedure
+               | must_procedure
+
+can_procedure ::= "cdef" funcname "(" {(primtype | typename) varname ","} ")" nl
+                  "{" nl {primvardecl} {statement} "return" expression nl "}" nl
+must_procedure ::= "mdef" funcname "(" {(primtype | typename) varname ","} ")" nl
+                   "{" nl {primvardecl} {statement} "return" expression nl "}" nl
+
+codetype ::= "must" funcname
+
+procedure ::= "fdef" funcname "(" {(primtype | typename) varname ","} ")" nl
+              "{" nl {primvardecl} {statement} "return" expression nl "}" nl
+
+primvardecl ::= primtype varname nl
+
+statement ::= "print" (chararr_accessor_lval | accessor | strlit ) nl
+            | "input" accessor_lval nl
+            | accessor_lval "=" expression nl
+            | "poly" must_accessor_lval "=" rec_accessor_lval nl
+            | "bind" ptr_accessor_lval "=" ("new" typename | accessor_lval) nl
+            | "move" ptr_accessor_lval "=" ptr_accessor_lval nl
+            | "free" ptr_accessor_lval nl
+            | "if" (logical_expression) "then" nl
+                {statement}
+              "else" nl
+                {statement}
+              "endif" nl
+            | "while" (logical_expression) "repeat" nl
+                {statement}
+              "endwhile" nl
+
+logical_expression ::= logical_term {or}
+or ::= "|" logical_term
+
+logical_term ::= logical_unary {and}
+and ::= "&" logical_unary
+
+logical_unary ::= not
+				| logical_primary
+not ::= "~" logical_primary
+
+logical_primary ::= comparison
+                  | "[" logical_expression "]"
+                 
+comparison ::= expression (eq | neq | gt | ge | lt | le)      #for char also
+eq ::= "==" expression
+neq ::= "!=" expression
+gt ::= ">" expression
+ge ::= ">=" expression
+lt ::= "<" expression
+le ::= "<=" expression
+
+expression ::= term {add | sub}
+add ::= "+" term
+sub ::= "-" term
+
+term ::= unary {mul | div}
+mul ::= "*" unary
+div ::= "/" unary
+
+unary ::= plus | minus | primary
+plus ::= "+" primary
+minus ::= "-" primary
+
+primary ::= intlit | charlit | accessor
+          | accessor_lval ".." mccall
+          | must_accessor_lval "::" pcall
+          | fcall | "(" expression ")"
+
+accessor_lval ::= varname {member}
+member ::= "." varname
+         | "[" (intlit | int_accessor_lval) "]"
+
+mccall ::= funcname "(" {varname ","} ")"
+fcall ::= funcname "(" {varname ","} ")"
+pcall ::= funcname "(" {varname ","} ")"
+
+
+```
+
+---
+
+## Already Done
 
 * IR output
 * vm ISA: 32bit opcode, optional 32bit operand
@@ -1163,7 +1353,7 @@ and how to include memory manager.
 
 ---
 
-## Plan
+## Future Plan
 
 * ptr ownership transfer
 
