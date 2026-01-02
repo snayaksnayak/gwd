@@ -34,6 +34,10 @@ $ ./build.sh
 Look at `build.sh` for more info,
 and how to include memory manager.
 
+## **Grammar of GWD Language**:
+
+* [EBNF Grammar of GWD](https://github.com/snayaksnayak/gwd/blob/main/grammar.txt)
+
 ## **Example GWD Programs**:
 
 * **Assignment, If and While**
@@ -64,27 +68,105 @@ and how to include memory manager.
   * [Pointer to Record](https://github.com/snayaksnayak/gwd/blob/main/examples/rptr.gwd)
 
 * **Function**
-  * [Function, param is alias, different to globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func1.gwd)
-  * [Function, param is alias, same as globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func2.gwd)
+  * [Function, params(alias) different to globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func1.gwd)
+  * [Function, params(alias) same as globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func2.gwd)
   * [Function, locals hide globals](https://github.com/snayaksnayak/gwd/blob/main/examples/func3.gwd)
 
 * **Dynamic Memory Allocation**
   * [Use of 'new' and 'free'](https://github.com/snayaksnayak/gwd/blob/main/examples/newfree.gwd)
   
-* **Polymorphism**
-  * [Polymorphism](https://github.com/snayaksnayak/gwd/blob/main/examples/poly.gwd)
-
 * **Memory Manager**
-  * [Memory Manager](https://github.com/snayaksnayak/gwd/blob/main/mm.gwd)
-  
-## **Grammar of GWD Language**:
+  * [Memory Manager of GWD](https://github.com/snayaksnayak/gwd/blob/main/mm.gwd)
 
-* [EBNF Grammar of GWD](https://github.com/snayaksnayak/gwd/blob/main/grammar.txt)
-
+* **Polymorphism**
+  * [Polymorphism with 'must' and 'poly'](https://github.com/snayaksnayak/gwd/blob/main/examples/poly.gwd)
  
----
+```gwd
+
+#poly test
+
+int a
+int b
+
+must add(int p, int q)
+
+type addableT == must add
+addableT addable
+
+type dog == record
+    int age
+    int cost
+    must add(int p, int q)
+    mdef add(int p, int q)
+    {
+        print "dog add"
+
+        print self.age
+        print self.cost
+
+        int s
+        s = p+q
+        return s
+    }
+endrec
+
+type cat == record
+    int age
+    int cost
+    must add(int p, int q)
+    mdef add(int p, int q)
+    {
+        print "cat add"
+
+        print self.age
+        print self.cost
+
+        int s
+        s = p+q
+        return s
+    }
+endrec
+
+dog d
+cat c
+
+func main()
+fdef main()
+{
+    d.age = 4
+    d.cost = 10
+
+    c.age = 3
+    c.cost = 9
+
+    a=5
+    b=3
+
+    int sum
+    int i
+
+    input i
+
+    if i == 0 then
+        poly addable = d
+    else
+        poly addable = c
+    endif
+
+    sum = addable::add(a, b)
+    print sum
+
+    return 0
+}
+
+
+```
+
 ---
 
+---
+
+---
 
 # **The GWD Programming Language**
 
